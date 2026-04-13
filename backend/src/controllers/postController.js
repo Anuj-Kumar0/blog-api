@@ -38,7 +38,7 @@ export const getAllPosts = async (req, res) => {
 };
   
 export const createPost = async (req, res) => {
-    const { title, content, isPublished, authorId } = req.body;
+    const { title, content, isPublished } = req.body;
   
     try {
       const post = await prisma.post.create({
@@ -46,7 +46,7 @@ export const createPost = async (req, res) => {
           title,
           content,
           isPublished,
-          authorId,
+          authorId: req.user.id,
         },
       });
   
