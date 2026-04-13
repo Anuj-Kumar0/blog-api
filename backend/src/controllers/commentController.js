@@ -17,14 +17,14 @@ export const getCommentsByPost = async (req, res) => {
 
 export const createComment = async (req, res) => {
     const postId = parseInt(req.params.id);
-    const { content, userId } = req.body;
+    const { content } = req.body;
   
     try {
       const comment = await prisma.comment.create({
         data: {
           content,
           postId,
-          userId,
+          userId: req.user.id,
         },
       });
   
