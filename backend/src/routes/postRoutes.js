@@ -6,13 +6,14 @@ import {
   updatePost,
   deletePost
 } from "../controllers/postController.js";
+import { authenticateToken, isAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getAllPosts);
 router.get("/:id", getPostById);
-router.post("/", createPost);
-router.put("/:id", updatePost);
-router.delete("/:id", deletePost);
+router.post("/", authenticateToken, isAdmin, createPost);
+router.put("/:id", authenticateToken, isAdmin, updatePost);
+router.delete("/:id", authenticateToken, isAdmin, deletePost);
 
 export default router;
