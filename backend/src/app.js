@@ -7,11 +7,6 @@ import commentRoutes from "./routes/commentRoutes.js";
 const app = express();
 app.use(express.json());
 
-
-app.use("/auth", authRoutes);
-app.use("/posts", postRoutes);
-app.use("/", commentRoutes);
-
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -20,5 +15,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+app.use("/auth", authRoutes);
+app.use("/posts", postRoutes);
+app.use("/", commentRoutes);
 
 export default app;
