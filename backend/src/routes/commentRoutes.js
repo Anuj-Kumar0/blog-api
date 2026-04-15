@@ -4,6 +4,7 @@ import {
   createComment,
   deleteComment,
 } from "../controllers/commentController.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -11,9 +12,9 @@ const router = express.Router();
 router.get("/posts/:id/comments", getCommentsByPost);
 
 // CREATE comment
-router.post("/posts/:id/comments", createComment);
+router.post("/posts/:id/comments", authenticateToken, createComment);
 
 // DELETE comment
-router.delete("/comments/:id", deleteComment);
+router.delete("/comments/:id", authenticateToken, deleteComment);
 
 export default router;
