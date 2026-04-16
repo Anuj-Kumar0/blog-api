@@ -4,6 +4,7 @@ import API from "../services/api";
 import { isLoggedIn, getToken } from "../services/auth";
 import LogoutButton from "../components/LogoutButton";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Post = () => {
     const { id } = useParams();
@@ -12,6 +13,9 @@ const Post = () => {
     const [comment, setComment] = useState("");
 
     const navigate = useNavigate();
+
+    const token = getToken();
+    const user = token ? jwtDecode(token) : null;
 
     const fetchPost = () => {
         API.get(`/posts/${id}`).then((res) => {
@@ -45,6 +49,15 @@ const Post = () => {
         }
     };
 
+    const handleDeleteComment = async (commentId) => {
+        try {
+            await API.delete(`/comments/${commentId}`);
+            fetchPost();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     if (!post) return <p>Loading...</p>;
 
     return (
@@ -57,7 +70,15 @@ const Post = () => {
 
             <h3>Comments</h3>
             {post.comments?.map((c) => (
-                <p key={c.id}>{c.content}</p>
+                <div key={c.id} style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    <p><strong>{c.user.username}</strong>: {c.content}</p>
+
+                    {user && (user.id === c.userId || user.role === "admin") && (
+                        <button onClick={() => handleDeleteComment(c.id)}>
+                            Delete
+                        </button>
+                    )}
+                </div>
             ))}
 
             {isLoggedIn() && (
