@@ -8,10 +8,23 @@ const Login = () => {
 
     const navigate = useNavigate();
 
+
     const handleLogin = async () => {
-        const res = await API.post("/auth/login", { email, password });
-        localStorage.setItem("token", res.data.token);
-        window.location.href = "/";
+        try {
+            const res = await API.post("/auth/login", { email, password });
+
+            const token = res?.data?.token;
+
+            if (!token) {
+                throw new Error("Token not received");
+            }
+
+            localStorage.setItem("token", token);
+
+            navigate("/");
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (
