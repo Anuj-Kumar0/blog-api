@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import API from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 const EditPost = () => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         API.get(`/posts/${id}`).then((res) => setPost(res.data));
@@ -21,12 +24,16 @@ const EditPost = () => {
             isPublished: post.isPublished,
         });
 
-        window.location.href = "/";
+        navigate(`/`);
     };
 
-    const deleteComment = async (id) => {
-        await API.delete(`/comments/${id}`);
-        window.location.reload();
+    const deleteComment = async (commentId) => {
+        await API.delete(`/comments/${commentId}`);
+
+        setPost((prev) => ({
+            ...prev,
+            comments: prev.comments.filter((c) => c.id !== commentId),
+        }));
     };
 
     if (!post) return <p>Loading...</p>;
@@ -44,6 +51,14 @@ const EditPost = () => {
                 value={post.content}
                 onChange={(e) => setPost({ ...post, content: e.target.value })}
             />
+
+            <button
+                onClick={() =>
+                    setPost({ ...post, isPublished: !post.isPublished })
+                }
+            >
+                {post.isPublished ? "Published" : "Draft"}
+            </button>
 
             <h3>Comments</h3>
             {post.comments?.map((c) => (
