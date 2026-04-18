@@ -3,6 +3,7 @@ import Dashboard from "./pages/Dashboard";
 import NewPost from "./pages/NewPost";
 import EditPost from "./pages/EditPost";
 import Login from "./pages/Login";
+import Post from "./pages/Post";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/new" element={<NewPost />} />
         <Route path="/edit/:id" element={<EditPost />} />
+        <Route path="/post/:id" element={<Post />} />
       </Routes>
     </BrowserRouter>
   );
