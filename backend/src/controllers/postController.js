@@ -15,6 +15,21 @@ export const getAllPosts = async (req, res) => {
     }
   };
 
+  export const getAllPostsForAdmin = async (req, res) => {
+    try {
+      const posts = await prisma.post.findMany({
+        include: {
+          author: true,
+        },
+      });
+  
+      res.json(posts);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: "Failed to fetch posts" });
+    }
+  };
+
   export const getPostById = async (req, res) => {
   const id = parseInt(req.params.id);
 
