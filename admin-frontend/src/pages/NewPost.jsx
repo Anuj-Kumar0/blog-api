@@ -6,7 +6,7 @@ const NewPost = () => {
     const [content, setContent] = useState("");
 
     const handleSubmit = async () => {
-        await API.post("/posts", {
+        await API.post("/posts/", {
             title,
             content,
             isPublished: true,
