@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import { useNavigate } from "react-router-dom";
+import LogoutButton from "../components/LogoutButton";
+import { isLoggedIn } from "../services/auth";
 
 const Dashboard = () => {
     const [posts, setPosts] = useState([]);
 
+    const navigate = useNavigate();
+
     const fetchPosts = async () => {
-        const res = await API.get("/posts");
+        const res = await API.get("/posts/admin");
         setPosts(res.data);
     };
-
     useEffect(() => {
-        fetchPosts();
+        if (!isLoggedIn()) {
+            navigate("/login");
+        } else {
+            fetchPosts();
+        }
     }, []);
 
     const togglePublish = async (post) => {
@@ -28,27 +36,57 @@ const Dashboard = () => {
 
     return (
         <div>
-            <h1>Dashboard</h1>
 
-            <a href="/new">NEW POST</a>
+            <h3><LogoutButton /></h3>
+
+            {isLoggedIn() && (
+                <>
+                    <h1>Dashboard</h1>
+
+                    <button onClick={() => navigate("/new")}>
+                        NEW POST
+                    </button>
+                </>
+            )}
 
             {posts.map((post) => (
-                <div key={post.id}>
+                <div
+                    key={post.id}
+                    onClick={() => navigate(`/post/${post.id}`)}
+                    style={{ cursor: "pointer", border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}
+                >
                     <h3>{post.title}</h3>
                     <p>{post.isPublished ? "Published" : "Draft"}</p>
 
-                    <button onClick={() => togglePublish(post)}>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            togglePublish(post);
+                        }}
+                    >
                         Toggle Publish
                     </button>
 
-                    <button onClick={() => deletePost(post.id)}>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            deletePost(post.id);
+                        }}
+                    >
                         Delete
                     </button>
 
-                    <a href={`/edit/${post.id}`}>Edit</a>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/edit/${post.id}`);
+                        }}
+                    >
+                        Edit
+                    </button>
                 </div>
             ))}
-        </div>
+        </div >
     );
 };
 
