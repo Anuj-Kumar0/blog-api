@@ -5,6 +5,7 @@ import { isLoggedIn, getToken } from "../services/auth";
 import LogoutButton from "../components/LogoutButton";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing content
 
 const Post = () => {
     const { id } = useParams();
@@ -60,13 +61,18 @@ const Post = () => {
 
     if (!post) return <p>Loading...</p>;
 
+    const sanitizedPostContent = DOMPurify.sanitize(post.content);
+
     return (
         <div>
-
             <h3><LogoutButton /></h3>
 
             <h1>{post.title}</h1>
-            <p>{post.content}</p>
+
+            <div
+                style={{ lineHeight: "1.6" }}
+                dangerouslySetInnerHTML={{ __html: sanitizedPostContent }}
+            />
 
             <h3>Comments</h3>
             {post.comments?.map((c) => (
