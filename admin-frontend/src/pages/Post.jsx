@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../services/api";
+import DOMPurify from "dompurify";
 
 const Post = () => {
     const { id } = useParams();
@@ -28,9 +29,10 @@ const Post = () => {
     if (loading) return <p>Loading...</p>;
     if (!post) return <p>Post not found</p>;
 
+    const sanitizedContent = DOMPurify.sanitize(post.content);
+
     return (
         <div style={{ padding: "20px" }}>
-
             <h1>{post.title}</h1>
 
             <p style={{ color: "gray" }}>
@@ -39,7 +41,11 @@ const Post = () => {
 
             <hr />
 
-            <p style={{ lineHeight: "1.6" }}>{post.content}</p>
+            <div
+                className="post-content"
+                style={{ lineHeight: "1.6" }}
+                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+            />
 
             <hr />
 
