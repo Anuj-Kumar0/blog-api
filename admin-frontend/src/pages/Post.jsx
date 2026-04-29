@@ -2,69 +2,102 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../services/api";
 import DOMPurify from "dompurify";
+import LogoutButton from "../components/LogoutButton";
+import Header from "../components/Header";
+import { jwtDecode } from "jwt-decode";
+import { isLoggedIn, getToken } from "../services/auth";
 
 const Post = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-    const [post, setPost] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const fetchPost = async () => {
-        try {
-            const res = await API.get(`/posts/${id}`);
-            setPost(res.data);
-        } catch (err) {
-            console.error(err);
-            navigate("/");
-        } finally {
-            setLoading(false);
-        }
-    };
+  const token = getToken();
+  const user = token ? jwtDecode(token) : null;
 
-    useEffect(() => {
-        fetchPost();
-    }, [id]);
+  const fetchPost = async () => {
+    try {
+      const res = await API.get(`/posts/${id}`);
+      setPost(res.data);
+    } catch (err) {
+      console.error(err);
+      navigate("/");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (loading) return <p>Loading...</p>;
-    if (!post) return <p>Post not found</p>;
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await API.delete(`/comments/${commentId}`);
+      fetchPost();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-    const sanitizedContent = DOMPurify.sanitize(post.content);
+  useEffect(() => {
+    fetchPost();
+  }, [id]);
 
-    return (
-        <div style={{ padding: "20px" }}>
-            <h1>{post.title}</h1>
+  if (loading) return <p>Loading...</p>;
+  if (!post) return <p>Post not found</p>;
 
-            <p style={{ color: "gray" }}>
-                {post.isPublished ? "Published" : "Draft"}
-            </p>
+  const sanitizedContent = DOMPurify.sanitize(post.content);
 
-            <hr />
+  return (
+    <div className="container page">
+      <Header />
+      <h1>{post.title}</h1>
+      <LogoutButton />
+      <button onClick={() => navigate(`/`)}>Back</button>
 
+      <p style={{ fontSize: "14px", color: "gray" }}>
+        By <strong>{post.author?.username}</strong> •{" "}
+        {new Date(post.createdAt).toLocaleString()}
+        {new Date(post.updatedAt).getTime() !==
+          new Date(post.createdAt).getTime() && (
+          <> • Edited {new Date(post.updatedAt).toLocaleString()}</>
+        )}
+      </p>
+
+      <p style={{ color: "gray" }}>
+        {post.isPublished ? "🟢 Published" : "🟡 Draft"}
+      </p>
+
+      <div
+        className="post-content"
+        style={{ lineHeight: "1.6" }}
+        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+      />
+
+      <hr />
+
+      <h3>Comments</h3>
+      {post.comments?.length > 0
+        ? post.comments.map((c) => (
             <div
-                className="post-content"
-                style={{ lineHeight: "1.6" }}
-                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-            />
+              key={c.id}
+              style={{ display: "flex", gap: "10px", alignItems: "center" }}
+            >
+              <p>
+                <strong>{c.user?.username}</strong> •{" "}
+                {new Date(c.createdAt).toLocaleString()} <br />
+                {c.content}
+              </p>
 
-            <hr />
-
-            <h3>Comments</h3>
-
-            {post.comments?.length > 0 ? (
-                post.comments.map((c) => (
-                    <div key={c.id} style={{ marginBottom: "10px" }}>
-                        <p>{c.content}</p>
-                        <small>
-                            by {c.user?.username} ({c.user?.role})
-                        </small>
-                    </div>
-                ))
-            ) : (
-                <p>No comments yet</p>
-            )}
-        </div>
-    );
+              {user && (user.id === c.userId || user.role === "admin") && (
+                <button onClick={() => handleDeleteComment(c.id)}>
+                  Delete
+                </button>
+              )}
+            </div>
+          ))
+        : null}
+    </div>
+  );
 };
 
 export default Post;
