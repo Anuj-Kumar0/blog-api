@@ -1,41 +1,73 @@
-/* General page styling */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
   margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0f17;
+  color: white;
+}
+
+.page {
+  max-width: 850px;
+  margin: 0 auto;
   padding: 20px;
 }
 
-/* Container */
-div {
-  max-width: 700px;
-  margin: 0 auto;
+.topbar {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111827;
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid #222;
 }
 
-/* Heading */
-h1 {
-  text-align: center;
-  color: #333;
+.brand {
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-/* Each post card */
-div > div {
-  background: #fff;
-  padding: 15px 20px;
-  margin: 15px 0;
+.post-card {
+  background: #111827;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.post-card:hover {
+  background: #1f2937;
+}
+
+.post-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.post-meta {
+  font-size: 13px;
+  color: gray;
+}
+
+button {
+  padding: 8px 12px;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border: none;
+  margin: 4px;
+  cursor: pointer;
+  background: #374151;
+  color: white;
 }
 
-/* Post title */
-h2 {
-  margin: 0 0 10px;
-  color: #222;
+button:hover {
+  background: #4b5563;
 }
 
-/* Post content */
-p {
-  margin: 0;
-  color: #555;
-  line-height: 1.5;
+.auth-box {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 20px;
+  background: #111827;
+  border-radius: 10px;
 }
