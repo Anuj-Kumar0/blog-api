@@ -28,10 +28,9 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="auth-box page">
       <Header />
       <h2>Login</h2>
-      <button onClick={() => navigate(`/`)}>Home</button>
       <input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
       <input
         placeholder="password"

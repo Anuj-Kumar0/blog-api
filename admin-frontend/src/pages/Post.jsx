@@ -50,17 +50,20 @@ const Post = () => {
   return (
     <div className="container page">
       <Header />
+      <div className="top-bar">
+        <button onClick={() => navigate(`/`)}>Back</button>
+        <LogoutButton />
+      </div>
+
       <h1>{post.title}</h1>
-      <LogoutButton />
-      <button onClick={() => navigate(`/`)}>Back</button>
 
       <p style={{ fontSize: "14px", color: "gray" }}>
         By <strong>{post.author?.username}</strong> •{" "}
         {new Date(post.createdAt).toLocaleString()}
         {new Date(post.updatedAt).getTime() !==
           new Date(post.createdAt).getTime() && (
-          <> • Edited {new Date(post.updatedAt).toLocaleString()}</>
-        )}
+            <> • Edited {new Date(post.updatedAt).toLocaleString()}</>
+          )}
       </p>
 
       <p style={{ color: "gray" }}>
@@ -78,23 +81,26 @@ const Post = () => {
       <h3>Comments</h3>
       {post.comments?.length > 0
         ? post.comments.map((c) => (
-            <div
-              key={c.id}
-              style={{ display: "flex", gap: "10px", alignItems: "center" }}
-            >
-              <p>
-                <strong>{c.user?.username}</strong> •{" "}
-                {new Date(c.createdAt).toLocaleString()} <br />
-                {c.content}
-              </p>
+          <div key={c.id} className="comment">
+            <div className="comment-header">
+              <span className="comment-user">{c.user?.username}</span>
+              <span className="comment-date">
+                {new Date(c.createdAt).toLocaleString()}
+              </span>
 
               {user && (user.id === c.userId || user.role === "admin") && (
-                <button onClick={() => handleDeleteComment(c.id)}>
+                <button
+                  className="comment-delete"
+                  onClick={() => handleDeleteComment(c.id)}
+                >
                   Delete
                 </button>
               )}
             </div>
-          ))
+
+            <p className="comment-content">{c.content}</p>
+          </div>
+        ))
         : null}
     </div>
   );

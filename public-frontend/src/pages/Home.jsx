@@ -24,7 +24,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className="container page">
       <Header />
 
       <h3>
@@ -35,7 +35,7 @@ const Home = () => {
         <div
           key={post.id}
           onClick={() => navigate(`/post/${post.id}`)}
-          style={{ cursor: "pointer", marginBottom: "20px" }}
+          className="post-card"
         >
           <h2>{post.title}</h2>
 

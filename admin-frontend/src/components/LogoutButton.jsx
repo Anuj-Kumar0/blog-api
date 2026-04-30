@@ -16,9 +16,9 @@ const LogoutButton = () => {
     return (
         <>
             {isLoggedIn() ? (
-                <button onClick={handleLogout}>Logout</button>
+                <button onClick={handleLogout} className="login">Logout</button>
             ) : (
-                <button onClick={handleLogin}>Login to See All Posts</button>
+                <button onClick={handleLogin} className="login">Login to See All Posts</button>
             )}
         </>
     );

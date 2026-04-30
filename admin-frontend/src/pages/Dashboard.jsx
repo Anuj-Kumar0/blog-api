@@ -51,55 +51,57 @@ const Dashboard = () => {
         </>
       )}
 
-      {posts.map((post) => (
-        <div
-          key={post.id}
-          onClick={() => navigate(`/post/${post.id}`)}
-          className="post-card"
-        >
-          <h3 className="post-title">{post.title}</h3>
-
-          <p className="post-meta">
-            By <strong>{post.author?.username}</strong> • Created{" "}
-            {new Date(post.createdAt).toLocaleString()}
-            {new Date(post.updatedAt).getTime() !==
-              new Date(post.createdAt).getTime() && (
-              <> • Edited {new Date(post.updatedAt).toLocaleString()}</>
-            )}
-          </p>
-
-          <p className={`badge ${post.isPublished ? "published" : "draft"}`}>
-            {post.isPublished ? "Published" : "Draft"}
-          </p>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              togglePublish(post);
-            }}
+      {[...posts]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .map((post) => (
+          <div
+            key={post.id}
+            onClick={() => navigate(`/post/${post.id}`)}
+            className="post-card"
           >
-            Toggle Publish
-          </button>
+            <h3 className="post-title">{post.title}</h3>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              deletePost(post.id);
-            }}
-          >
-            Delete
-          </button>
+            <p className="post-meta">
+              By <strong>{post.author?.username}</strong> • Created{" "}
+              {new Date(post.createdAt).toLocaleString()}
+              {new Date(post.updatedAt).getTime() !==
+                new Date(post.createdAt).getTime() && (
+                  <> • Edited {new Date(post.updatedAt).toLocaleString()}</>
+                )}
+            </p>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/edit/${post.id}`);
-            }}
-          >
-            Edit
-          </button>
-        </div>
-      ))}
+            <p className={`badge ${post.isPublished ? "published" : "draft"}`}>
+              {post.isPublished ? "Published" : "Draft"}
+            </p>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePublish(post);
+              }}
+            >
+              Toggle Publish
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                deletePost(post.id);
+              }}
+            >
+              Delete
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/edit/${post.id}`);
+              }}
+            >
+              Edit
+            </button>
+          </div>
+        ))}
     </div>
   );
 };

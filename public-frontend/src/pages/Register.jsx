@@ -27,10 +27,9 @@ const Registration = () => {
   };
 
   return (
-    <div>
+    <div className="auth-box page">
       <Header />
       <h2>Register</h2>
-      <button onClick={() => navigate(`/`)}>Home</button>
       <input
         placeholder="username"
         onChange={(e) => setUsername(e.target.value)}

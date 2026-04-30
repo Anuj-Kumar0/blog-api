@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import API from "../services/api";
 import { Editor } from "@tinymce/tinymce-react";
 import Header from "../components/Header";
+import LogoutButton from "../components/LogoutButton";
 
 const EditPost = () => {
   const { id } = useParams();
@@ -52,7 +53,8 @@ const EditPost = () => {
   return (
     <div className="container page">
       <Header />
-      <h2>Edit Post</h2>
+      <LogoutButton />
+      <h1>Edit Post</h1>
 
       {/* Title Input */}
       <input
@@ -83,9 +85,9 @@ const EditPost = () => {
       />
 
       {/* Publish/Draft Toggle */}
-      <div className="new-post-submit-btn-container">
+      <div className="">
         <button
-          className="new-post-submit-btn"
+          className=""
           onClick={() => setPost({ ...post, isPublished: !post.isPublished })}
         >
           {post.isPublished ? "Published" : "Draft"}

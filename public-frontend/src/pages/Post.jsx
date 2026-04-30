@@ -65,41 +65,51 @@ const Post = () => {
   const sanitizedPostContent = DOMPurify.sanitize(post.content);
 
   return (
-    <div>
+    <div className="container page">
       <Header />
-      <h3>
+      <div className="top-bar">
+        <button onClick={() => navigate(`/`)}>Back</button>
         <LogoutButton />
-      </h3>
+      </div>
 
-      <button onClick={() => navigate(`/`)}>Back</button>
-
-      <h1>{post.title}</h1>
+      <h1 className="post-title" style={{ fontSize: "32px" }}>{post.title}</h1>
 
       <p style={{ fontSize: "14px", color: "gray" }}>
         By <strong>{post.author?.username}</strong> •{" "}
         {new Date(post.createdAt).toLocaleString()}
       </p>
 
-      <div
-        style={{ lineHeight: "1.6" }}
-        dangerouslySetInnerHTML={{ __html: sanitizedPostContent }}
-      />
+      <div className="post-content">
+        <div
+          dangerouslySetInnerHTML={{ __html: sanitizedPostContent }}
+        />
+      </div>
+
+      <hr />
 
       <h3>Comments</h3>
       {post.comments?.map((c) => (
-        <div
-          key={c.id}
-          style={{ display: "flex", gap: "10px", alignItems: "center" }}
-        >
-          <p>
-            <strong>{c.user?.username}</strong> •{" "}
-            {new Date(c.createdAt).toLocaleString()} <br />
-            {c.content}
-          </p>
+        <div key={c.id} className="comment">
+          <div className="comment-header">
+            <span className="comment-user">{c.user?.username}</span>
 
-          {user && (user.id === c.userId || user.role === "admin") && (
-            <button onClick={() => handleDeleteComment(c.id)}>Delete</button>
-          )}
+            <span className="comment-date">
+              {new Date(c.createdAt).toLocaleString()}
+            </span>
+
+            {user && (user.id === c.userId || user.role === "admin") && (
+              <button
+                className="comment-delete"
+                onClick={() => handleDeleteComment(c.id)}
+              >
+                Delete
+              </button>
+            )}
+          </div>
+
+          <div className="comment-content">
+            {c.content}
+          </div>
         </div>
       ))}
 
