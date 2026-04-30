@@ -47,7 +47,7 @@ const Dashboard = () => {
         <>
           <h1>Dashboard</h1>
 
-          <button onClick={() => navigate("/new")}>NEW POST</button>
+          <button onClick={() => navigate("/new")}>NEW BLOG</button>
         </>
       )}
 
