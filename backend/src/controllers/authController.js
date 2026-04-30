@@ -20,8 +20,18 @@ export const register = async (req, res) => {
   
       res.status(201).json(user);
     } catch (err) {
-      res.status(500).json({ error: "User already exists or error occurred" });
+    console.error(err);
+
+    if (err.code === "P2002") {
+      return res.status(409).json({
+        error: "Email already exists",
+      });
     }
+
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
   };
 
   export const login = async (req, res) => {
