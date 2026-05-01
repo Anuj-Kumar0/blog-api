@@ -106,12 +106,29 @@ export const createPost = async (req, res) => {
     const id = parseInt(req.params.id);
   
     try {
+      const post = await prisma.post.findUnique({
+        where: { id },
+      });
+  
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+
+      if (req.user.role !== 'admin' && post.authorId !== req.user.id) {
+        return res.status(403).json({ error: "You are not authorized to delete this post" });
+      }
+  
+      await prisma.comment.deleteMany({
+        where: { postId: id },
+      });
+  
       await prisma.post.delete({
         where: { id },
       });
   
-      res.json({ message: "Post deleted" });
+      res.json({ message: "Post and associated comments deleted" });
     } catch (err) {
-      res.status(500).json({ error: "Error deleting post" });
+      console.error("Error deleting post:", err); // Log the full error for debugging
+      res.status(500).json({ error: "Error deleting post", details: err.message });
     }
   };
