@@ -31,8 +31,12 @@ const Dashboard = () => {
   };
 
   const deletePost = async (id) => {
-    await API.delete(`/posts/${id}`);
-    fetchPosts();
+    try {
+      await API.delete(`/posts/${id}`);
+      fetchPosts();
+    } catch (error) {
+      console.error("Error deleting post:", error.response || error);
+    }
   };
 
   return (
